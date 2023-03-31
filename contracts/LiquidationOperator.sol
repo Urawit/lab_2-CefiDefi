@@ -197,11 +197,14 @@ contract LiquidationOperator is IUniswapV2Callee {
 
     constructor() {
         // TODO: (optional) initialize your contract
-
-        uniswapV2Pair_WETH_USDT = IUniswapV2Pair(uniswapV2Factory.getPair(address(WETH), address(USDT))); // Pool1
-        uniswapV2Pair_WBTC_WETH = IUniswapV2Pair( uniswapV2Factory.getPair(address(WBTC), address(WETH)) ); // Pool2
-        uniswapV2Pair_WBTC_USDT = IUniswapV2Pair( uniswapV2Factory.getPair(address(WBTC), address(USDT)) ); // Pool3
-        uniswapV2Pair_WETH_USDC = IUniswapV2Pair(  uniswapV2Factory.getPair(address(WETH), address(USDC))); // Pool4
+        // Pool1
+        uniswapV2Pair_WETH_USDT = IUniswapV2Pair(uniswapV2Factory.getPair(address(WETH), address(USDT)));
+        // Pool2
+        uniswapV2Pair_WBTC_WETH = IUniswapV2Pair( uniswapV2Factory.getPair(address(WBTC), address(WETH)) );
+        // Pool3
+        uniswapV2Pair_WBTC_USDT = IUniswapV2Pair( uniswapV2Factory.getPair(address(WBTC), address(USDT)) );
+        // Pool4
+        uniswapV2Pair_WETH_USDC = IUniswapV2Pair(  uniswapV2Factory.getPair(address(WETH), address(USDC)));
 
         debt_USDT = 8_128_956343;
 
