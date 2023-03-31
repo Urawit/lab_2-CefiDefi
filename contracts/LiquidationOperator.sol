@@ -28,8 +28,6 @@ interface ILendingPool {
         bool receiveAToken
     ) external;
 
-    function getUserReserveData(address asset, address user) external;
-
     /**
      * Returns the user account data across all the reserves
      * @param user The address of the user
@@ -282,7 +280,7 @@ contract LiquidationOperator is IUniswapV2Callee {
         ) = uniswapV2Pair_WETH_USDC.getReserves(); // Pool4
 
         console.log("USDC Balance: %s", USDC.balanceOf(address(this)));
-        console.log("BEFORE: WETH Balance: %s", WETH.balanceOf(address(this)));
+        console.log("BEFORE REPAY: WETH Balance: %s", WETH.balanceOf(address(this)));
 
         // 2.1 liquidate the target user
 
@@ -296,7 +294,7 @@ contract LiquidationOperator is IUniswapV2Callee {
             false
         );
 
-        console.log("AFTER: WETH Balance: %s", WETH.balanceOf(address(this)));
+        console.log("AFTER REPAY: WETH Balance: %s", WETH.balanceOf(address(this)));
 
         // 2.2 swap WBTC for other things or repay directly
         // 2.3 repay
