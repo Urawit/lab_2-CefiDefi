@@ -147,7 +147,6 @@ contract LiquidationOperator is IUniswapV2Callee {
     IUniswapV2Pair immutable uniswapV2Pair_WBTC_WETH; // Pool2
     IUniswapV2Pair immutable uniswapV2Pair_WBTC_USDT; // Pool3
     IUniswapV2Pair immutable uniswapV2Pair_WETH_USDC; // Pool4
-    IUniswapV2Pair immutable uniswapV2Pair_USDC_WETH; // Pool5
 
     ILendingPool constant lendingPool =
         ILendingPool(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
@@ -199,26 +198,12 @@ contract LiquidationOperator is IUniswapV2Callee {
     constructor() {
         // TODO: (optional) initialize your contract
 
-        uniswapV2Pair_WETH_USDT = IUniswapV2Pair(
-            uniswapV2Factory.getPair(address(WETH), address(USDT))
-        ); // Pool1
-        uniswapV2Pair_WBTC_WETH = IUniswapV2Pair(
-            uniswapV2Factory.getPair(address(WBTC), address(WETH))
-        ); // Pool2
-        uniswapV2Pair_WBTC_USDT = IUniswapV2Pair(
-            uniswapV2Factory.getPair(address(WBTC), address(USDT))
-        ); // Pool3
-        uniswapV2Pair_WETH_USDC = IUniswapV2Pair(
-            uniswapV2Factory.getPair(address(WETH), address(USDC))
-        ); // Pool4
-        uniswapV2Pair_USDC_WETH = IUniswapV2Pair(
-            uniswapV2Factory.getPair(address(USDC), address(WETH))
-        ); // Pool5
+        uniswapV2Pair_WETH_USDT = IUniswapV2Pair(uniswapV2Factory.getPair(address(WETH), address(USDT))); // Pool1
+        uniswapV2Pair_WBTC_WETH = IUniswapV2Pair( uniswapV2Factory.getPair(address(WBTC), address(WETH)) ); // Pool2
+        uniswapV2Pair_WBTC_USDT = IUniswapV2Pair( uniswapV2Factory.getPair(address(WBTC), address(USDT)) ); // Pool3
+        uniswapV2Pair_WETH_USDC = IUniswapV2Pair(  uniswapV2Factory.getPair(address(WETH), address(USDC))); // Pool4
 
-        // debt_USDT = 2916378221684; //2916378.221684
         debt_USDT = 8_128_956343;
-        // debt_to_cover = lendingPool.getUserReserveData();
-        // debt_USDT = (debt_to_cover.currentStableDebt() + debt_to_cover.currentVariableDebt()) * 0.5;
 
         // END TODO
     }
@@ -292,27 +277,9 @@ contract LiquidationOperator is IUniswapV2Callee {
             uint256 reserve_WETH_Pool4,
 
         ) = uniswapV2Pair_WETH_USDC.getReserves(); // Pool4
-        // (
-        //     uint256 reserve_USDC_Pool5,
-        //     uint256 reserve_WETH_Pool5,
 
-        // ) = uniswapV2Pair_USDC_WETH.getReserves(); // Pool5
-
-        // console.log(
-        //     "uniswapV2Pair(%s): WBTC <> USDT",
-        //     address(uniswapV2Pair_WBTC_USDT)
-        // );
-        // console.log("reserve WBTC: %s", reserve_WBTC_Pool3);
-        // console.log("reserve USDT: %s", reserve_USDT_Pool3);
-
-        // console.log(
-        //     "uniswapV2Pair(%s): WBTC <> WETH",
-        //     address(uniswapV2Pair_WBTC_WETH)
-        // );
-        // console.log("reserve WBTC: %s", reserve_WBTC_Pool2);
-        // console.log("reserve WETH: %s", reserve_WETH_Pool2);
         console.log("USDC Balance: %s", USDC.balanceOf(address(this)));
-        console.log("WETH Balance: %s", WETH.balanceOf(address(this)));
+        console.log("BEFORE: WETH Balance: %s", WETH.balanceOf(address(this)));
 
         // 2.1 liquidate the target user
 
@@ -325,11 +292,10 @@ contract LiquidationOperator is IUniswapV2Callee {
             debtToCover,
             false
         );
-        // uint collateral_WBTC = WBTC.balanceOf(address(this));
-        // uint collateral_WETH = WETH.balanceOf(address(this));
-        console.log("WETH Balance: %s", WETH.balanceOf(address(this)));
 
-        // // 2.2 swap WBTC for other things or repay directly
+        console.log("AFTER: WETH Balance: %s", WETH.balanceOf(address(this)));
+
+        // 2.2 swap WBTC for other things or repay directly
         // 2.3 repay
 
         uint repay_WETH = getAmountIn(
@@ -338,8 +304,6 @@ contract LiquidationOperator is IUniswapV2Callee {
             reserve_USDC_Pool4
         );
         WETH.transfer(address(uniswapV2Pair_WETH_USDC), repay_WETH);
-        //หลัง replay จะใช้ดูว่าเหลือเท่าไหร่ดีน้าาา
-        // ใช้คำสั่งนี้เช็คได้เลอออ console.log("WETH Balance After Repay: %s", WETH.balanceOf(address(this)));
 
         // END TODO
     }
